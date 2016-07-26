@@ -11,11 +11,17 @@ module SessionsHelper
     cookies.permanent.signed[:user_id] = user.id
     cookies.permanent[:remember_token] = user.remember_token
   end
+  
+  # Returns true if the given user is the current user
+  def current_user?(user)
+    user == current_user #current_user method defined below
+  end
+  
   # PREVIOUS current_user method (left just in case)
   # Returns the current logged-in user (if any).
-  def current_user
-    @current_user ||= User.find_by(id: session[:user_id])
-  end
+  # def current_user
+  #   @current_user ||= User.find_by(id: session[:user_id])
+  # end
   
   def current_user
     if (user_id = session[:user_id])
@@ -36,10 +42,10 @@ module SessionsHelper
     !current_user.nil?
   end
   
-  #forgets a persistent session
+  #forgets a persistent session, aka deletes the cookies of the user ID and the remember_token
   def forget(user)
-    user.forget
-    cookies.delete(:user_id)
+    user.forget #this is interesting...might be a rewrite to allow class method style call
+    cookies.delete(:user_id) 
     cookies.delete(:remember_token)
   end
 
@@ -48,5 +54,16 @@ module SessionsHelper
     forget(current_user)
     session.delete(:user_id)
     @current_user = nil
+  end
+  
+  # Redirects to stored location (or to the default)
+  def redirect_back_or(default)
+    redirect_to ( session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+  
+  #stores a URL trying to be accessed; used to return to URL after sign in/other necc step.
+  def store_location
+    session[:forwarding_url] =request.original_url if request.get?
   end
 end

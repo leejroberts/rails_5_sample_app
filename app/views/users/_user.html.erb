@@ -1,0 +1,10 @@
+<li>
+    <!--link_to below makes the gravatar of the user linked back to the user profile -->
+    <!--gravatar_for found is sessions helper, retrieves gravatar for the user-->
+    <%= link_to gravatar_for(user, size: 50), user %> <!--sessions_helper method; displays user gravatar; size: 50 reduces size for list view-->
+    <%= link_to user.name, user %> <!-- makes a link_to for each user linking back to their user show page -->
+    <% if current_user.admin? && !current_user?(user) %>
+        | <%= link_to "delete", user, method: :delete,
+                                    data: { confirm: "You sure?" } %>
+    <% end %>
+</li>

@@ -1,0 +1,20 @@
+<% provide(:title, 'All users') %><!--supplies the page title to the browser tab-->  
+
+<h1>All users</h1>
+
+<%= will_paginate %> <!-- creates a paginate div (likely via boostrap-will_paginate gem, provides a navigation header with page numbers) -->
+<ul class= "users"> <!-- class="users"; helps infer _user.html.erb to render @users
+    <%= render @users %> <!-- iterates through @users renders each with _user.html.erb "automagically"-->
+</ul>
+
+<%= will_paginate %> <!-- creates a bottom navigation bar -->
+
+<!--pre-refactoring code below, same result NOTE: erb removed to avoid execution-->
+<!--<ul class="users">-->
+<!--   @users.each do |user|-->
+<!--    <li>-->
+<!--      gravatar_for user, size: 50 -->
+<!--      #link_to user.name, user -->
+<!--    </li>-->
+<!--  end-->
+<!--</ul>-->
