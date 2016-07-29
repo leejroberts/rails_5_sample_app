@@ -25,11 +25,13 @@ Rails.application.configure do
 
     config.cache_store = :null_store
   end
-
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-
-  config.action_mailer.perform_caching = false
+  
+  # changed from false so that we can preview emails
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :test #we are not actually sending emails, they will go to the terminal
+  host = 'rails-5-hartl-leejamesroberts.c9users.io'
+  config.action_mailer.default_url_options = { host: host, protocol: 'https' }
+  # config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

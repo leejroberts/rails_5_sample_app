@@ -15,19 +15,23 @@ class UsersController < ApplicationController
     @user = User.new #creates a new instance of user class
   end
   
-  #routes to view users/index; view shows the list of users
+  # returns the index view to the browser; populated with all the users in pages of 30 users
   def index
     @users = User.paginate(page: params[:page]) #uses paginate gem to create a lists of users separated into pages by groups of 30
   end
   
-  #Saves instance of User to the database; 
-      # if save successful, routes to user homepage w/ welcome message 
+  # Saves instance of User to the database; 
+  # if save successful; routes to user homepage w/ welcome message 
   def create
     @user = User.new(user_params)
-    if @user.save #if @user.save == true,
-      log_in @user #logs in the newly created user...
-      flash[:success] = "Welcome to the Sample App!" #and show this message
-      redirect_to @user #renders view/user/show
+    if @user.save #implied boolean check
+      @user.send_activation_email #original code relocated to user model in this method
+      flash[:info] = "Please check your email to activate your account." #pop_up to create user message
+      redirect_to root_url #sends you back to the root_ufrl aka "welcome page"
+      ##code below is for a user sign-up without email activation being sent
+        ## log_in @user #logs in the newly created user... 
+        ## flash[:success] = "Welcome to the Sample App!" #and show this message
+        ## redirect_to @user #renders view/user/show
     else #if @user.save != true
       render 'new' #renders view/user/new; the sign-up form
     end
