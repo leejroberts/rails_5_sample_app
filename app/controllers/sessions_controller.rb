@@ -1,4 +1,4 @@
-class SessionsController < ApplicationController
+class SessionsController < ApplicationController #NOTES: below code
 
   def new #creates a new Session, not a new user or instance of user in controller...
   end
@@ -28,14 +28,17 @@ class SessionsController < ApplicationController
   end
 end
 
-#Sessions Helper:
-  # def log_out
-  #   forget(current_user) ##forget<sessions helper current user from the cookies (I think)
-  #   session.delete(:user_id) ##deletes session information for the current user
-  #   @current_user = nil
-  # end
+=begin
 
-#ternary operator explaination:
+NOTES:
+Sessions Helper:
+  def log_out
+    forget(current_user) ##forget<sessions helper current user from the cookies (I think)
+    session.delete(:user_id) ##deletes session information for the current user
+    @current_user = nil
+  end
+
+ternary Operator:
   # ternary operator notation:
     # params[:session][:remember_me] == '1' ? remember(user) : forget(user)
   
@@ -45,3 +48,5 @@ end
     # else
     #   forget(user)
     # end
+    
+=end

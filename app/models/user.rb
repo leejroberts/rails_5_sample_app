@@ -43,14 +43,14 @@ class User < ApplicationRecord
   end                                         #stored in browser when you click REMEMBER ME on sign in
   
   
-  #activates an account; code was cut out of the controller and moved here for speed
+  # activates an account; code was cut out of the controller and moved here for speed
   def activate
     update_attribute(:activated, true)
     update_attribute(:activated_at, Time.zone.now)
   end
   # sends activation email...like the man said 
   def send_activation_email
-    UserMailer.account_activation(self).deliver_now #deliver now is a rails method (i think)
+    UserMailer.account_activation(self).deliver_now #deliver_now is a rails method (i think)
   end
 
 
