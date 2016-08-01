@@ -57,10 +57,16 @@ Rails.application.configure do
   # Use a real queuing backend for Active Job (and separate queues per environment)
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "sample_app_#{Rails.env}"
+  
+  ## SENDGRID SETUP
+    # the below action_mailer configs are to set up sendgrid to send emails
+    # in a production environment
   config.action_mailer.perform_caching = false #might need to be commented out for sendgrid to work
-config.action_mailer.raise_delivery_errors = true
+  
+  
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = '<your heroku app>.herokuapp.com'
+  host = 'aqueous-retreat-50960.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
