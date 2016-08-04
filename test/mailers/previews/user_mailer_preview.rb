@@ -10,14 +10,18 @@ class UserMailerPreview < ActionMailer::Preview
 
   # Preview this email at http://rails-5-hartl-leejamesroberts.c9users.io:8080/rails/mailers/user_mailer/password_reset
   
-  #NOTE: UserMailerPreview is kinda like a test suite in an odd way.
+  #NOTE: UserMailerPreview PREVIEW!!!! 
+    ## UserMailerPreview is NOT UserMailer 
+    ## is kinda like a test suite.
     ## for this reason you may define and call a method (with the same name) twice in a row (see below)
     ## first you define the method for the UserMailerPreview
       ## then you call a method of the same name
   
   #NOTE: these two password_resets are NOT the same method!
-  def password_reset #defining method for UserMailerPreview
-    UserMailer.password_reset #calling a method WITH THE SAME NAME from UserMailer 
+  def password_reset #defining method for UserMailerPREVIEW
+    user = User.first
+    user.reset_token = User.new_token
+    UserMailer.password_reset(user) #calling a method WITH THE SAME NAME from UserMailer (not preview)
   end 
 end
 

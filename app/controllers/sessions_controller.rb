@@ -26,10 +26,9 @@ class SessionsController < ApplicationController #NOTES: below code
     log_out if logged_in? #logout < sessions helper; removes ID and _token from cookies
     redirect_to root_url
   end
-end
-
+end  
 =begin
-
+        
 NOTES:
 Sessions Helper:
   def log_out

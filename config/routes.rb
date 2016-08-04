@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
   
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   # Note about routes
     ## you can route ANY url to ANY controller action
     
@@ -46,4 +50,5 @@ Rails.application.routes.draw do
   resources :users
    # actions for account activation
   resources :account_activations, only: [:edit] #this edits resources to only include the edit feature
+  resources :password_resets, only: [:new, :create, :edit, :update]
 end

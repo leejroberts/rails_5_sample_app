@@ -1,6 +1,6 @@
 class User < ApplicationRecord 
   #NOTE: indicates further info at bottom of code
-  attr_accessor :remember_token, :activation_token       #NOTE: attr_accessor
+  attr_accessor :remember_token, :activation_token, :reset_token       #NOTE: attr_accessor
   before_save   :downcase_email # calls method(s) before saving to DB
   before_create :create_activation_digest # before instantiation AND save (double check this)
   validates :name,  presence: true, length: { maximum: 50 }
@@ -42,7 +42,6 @@ class User < ApplicationRecord
       update_attribute(:remember_digest, nil) #remember_digest is used to identity users, 
   end                                         #stored in browser when you click REMEMBER ME on sign in
   
-  
   # activates an account; code was cut out of the controller and moved here for speed
   def activate
     update_attribute(:activated, true)
@@ -52,8 +51,23 @@ class User < ApplicationRecord
   def send_activation_email
     UserMailer.account_activation(self).deliver_now #deliver_now is a rails method (i think)
   end
+  
+  #Sets the password reset attributes.
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_attribute(:reset_digest, User.digest(reset_token))
+    update_attribute(:reset_sent_at, Time.zone.now)
+  end
+  
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
 
-
+  #returns true if a password reset has expired
+  ## syntax is odd, but it checks if the password was sent more than 2 hours ago
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago 
+  end
   private
     #converts email to all lowercase for ease of comparison/checking/finding user
     def downcase_email 
