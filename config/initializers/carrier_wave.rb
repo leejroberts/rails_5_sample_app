@@ -10,3 +10,10 @@ if Rails.env.production?
   end
 end
 #the function of this is to use AWS for image storage in the production environment with Heroku
+
+# the following are entered into the terminal for set-up purposes
+  # the AWS user we set up is named lee...the access codes are somewhere safe
+
+# heroku config:set S3_ACCESS_KEY=<access key>
+# $ heroku config:set S3_SECRET_KEY=<secret key>
+# $ heroku config:set S3_BUCKET=<bucket name>
