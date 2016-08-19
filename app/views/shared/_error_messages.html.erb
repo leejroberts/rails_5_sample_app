@@ -1,12 +1,29 @@
-<% if @user.errors.any? %>
+<% if object.errors.any? %>
     <div id='error_explanation'>
         <div class='alert alert-danger'>
-            the form contains <%= pluralize(@user.errors.count, "error") %>.
+            the form contains <%= pluralize(object.errors.count, "error") %>.
         </div>
         <ul>
-            <% @user.errors.full_messages.each do |msg| %>
+            <% object.errors.full_messages.each do |msg| %>
                 <li><%= msg %></li>
             <% end %>
         </ul>
     </div>
 <% end %>
+<!--
+IMPORTANT: use of the word 'object' in error messages partial (above).
+object is used as a stand-in(or a variable) for the actual object class that is going to be called
+    the views calling the above partial supply the object name in the form helpers.
+        ex: 
+        
+        form_for(@user) do |f|
+        render 'shared/error_messages', object: f.object
+        
+        so object is being set as @user.object or User bc @user is an instance variable
+        that is an instantiation of the User object (if I am wrong correct this)
+
+    
+    example if you were in the new user view, it would supply User as object
+    if you were dealing with microposts it would supply Micropost as the object
+
+-->

@@ -1,0 +1,8 @@
+    Method	                           Purpose
+
+micropost.user	                Returns the User object associated with the micropost
+user.microposts	                Returns a collection of the user’s microposts
+user.microposts.create(arg)	    Creates a micropost associated with user
+user.microposts.create!(arg)	  Creates a micropost associated with user (exception on failure)
+user.microposts.build(arg)	    Returns a new Micropost object associated with user
+user.microposts.find_by(id: 1)	Finds the micropost with id 1 and user_id equal to user.id

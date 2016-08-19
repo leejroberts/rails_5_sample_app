@@ -1,0 +1,19 @@
+<%= form_for(@micropost, html: { multipart: true }) do |f| %><!--the odd html multipart is necc for the image to show-->
+  <%= render "shared/error_messages", object: f.object %>
+  <div class="field">
+    <%= f.text_area :content, placeholder: "Compose a new micropost..." %><!-- placeholder: adds some text to a text field box, will disappear when user begins text input-->
+  </div>
+  <%= f.submit "Post", class: "btn btn-primary" %>
+  <span class="picture">
+    <%= f.file_field :picture, accept: 'image/jpeg,img/gif,image/png' %><!--adds the image from carrierwave gem, also verifies that the image is a usable file type-->
+  </span><!-- the accept: field states exactly what file types it will accept. Note that the filetype is also dictated in the uploader, so this is a double verification -->
+<% end %>
+
+<script type='text/javascript'>
+  $('#micropost_picture').bind('change', function()
+    var size_in_megabytes = this.file[0].size/1024/1024;
+    if (size_in_megabytes > 5) {
+      alert('Maximum file size is 5mb, Please choose a smaller file.');
+    }
+  });
+</script>

@@ -4,8 +4,9 @@
 <div class="row">
     <div class='col-md-6 col-md-offset-3'>
         <%= form_for(@user) do |f| %>
-        <%= render 'shared/error_messages' %>
-            
+        <%= render 'shared/error_messages', object: f.object %>
+        <!--above code: object: f.object calls the class of @user to give to the partial-->
+            <!-- this is bc the partial is generic and is used for both users and microposts errors-->
             <%= f.label :name %>
             <%= f.text_field :name, class: 'form-control'%>
             

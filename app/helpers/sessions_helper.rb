@@ -24,11 +24,10 @@ module SessionsHelper
   # end
   
   def current_user
-    if (user_id = session[:user_id])
-      @current_user ||= User.find_by(id: user_id)
-    elsif (user_id = cookies.signed[:user_id])
-      # raise       # The tests still pass, so this branch is currently untested.
-      user = User.find_by(id: user_id)
+    if (user_id = session[:user_id]) #checks that the user id matches the session id
+      @current_user ||= User.find_by(id: user_id) #if that is true, it sets @current_user to the user with the matching id
+    elsif (user_id = cookies.signed[:user_id]) #does the same thing with cookies
+      user = User.find_by(id: user_id) 
       if user && user.authenticated?(:remember, cookies[:remember_token])
         log_in user
         @current_user = user

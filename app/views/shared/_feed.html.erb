@@ -1,0 +1,19 @@
+<% if @feed_items.any? %> 
+  <ol class="microposts">
+    <%= render @feed_items %><!--important note!-->
+  </ol>
+    <%= will_paginate @feed_items %>
+<% end %>
+<!--
+checks for existing user microposts (.any?) 
+  if true
+    renders the microposts into the partial as an ordered list
+    !!! it renders each micropost using the _micropost partial !!!
+      rails 'knows' to do this bc @feed_items...
+        each have a RUBY class of Micropost.
+        thus, rails looks for a partial and/or folder with the same name finding...
+        views/microposts/_micropost.html.erb
+    finally the results are paginated using the pagination gem
+  
+-->
+

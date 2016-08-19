@@ -31,3 +31,17 @@ User.create!(name: "Example User",
                activated: true,
                activated_at: Time.zone.now)
 end
+
+# makes a loops that goes through the first 6 users 
+  ## goes through the users list 50 times making one post each
+  ## this makes 50 posts for all 6 users aka 450 posts
+    ## so user1 post, user2 post, user3 post user4 post etc
+    ## then loops back to user1 49 more times
+    
+users = User.order(:created_at).take(6) #takes the first 6 users from the DB
+50.times do #does the code below 50 times
+  content = Faker::Lorem.sentence(5) #makes 5 sentences of lorem ipsum
+  users.each { |user| user.microposts.create!(content: content)} #one post per user 
+end
+
+    

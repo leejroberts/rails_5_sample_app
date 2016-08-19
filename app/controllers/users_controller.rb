@@ -1,14 +1,18 @@
 class UsersController < ApplicationController
   #before_actions; rails method used to make sure something has happened first
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] #confirms user logged in before []
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] #confirms user logged in before the actions to the right
+    ##important: logged_in_user moved to APPLICATION_CONTROLLER see note:
   before_action :correct_user,   only: [:edit, :update] #confirms user is attempting to edit/update self
   before_action :admin_user,     only: :destroy
   
   #Note: that many of these methods create an instance variable @user; 
   
   #routes to user/show to show the currently logged in user
+  ## displays all the microposts in pages from most recent to least recent
+  
   def show
     @user = User.find(params[:id])#finds user by the id parameter; creates an instance of the user 
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
   
   def new
@@ -79,15 +83,6 @@ class UsersController < ApplicationController
     # before filters: makes sure something has happened before something else
     
     
-    # confirms a logged in user
-    def logged_in_user
-      unless logged_in?#Sessions Helper Method; returns boolean if user is/is not logged in
-        store_location #Sessions Helper method; stores the URL trying to be accessed
-        flash[:danger] = "Please log in." #logged_in? == false; red log-in message 
-        redirect_to login_url #logged_in? == false; routes view to login page
-      end
-    end
-    
     # confirms that the user
     def correct_user
       @user = User.find(params[:id])
@@ -99,9 +94,17 @@ class UsersController < ApplicationController
       redirect_to(root_url) unless current_user.admin? #sends users back to the root_url unless they are admin users
     end
 end
+=begin
 
-# module SessionsHelper 
-# methods listed below
-  # def logged_in?
-  #   !current_user.nil?
-  # end
+  Note:
+  logged_in_user (before action) has been moved to application_controller
+    reason: both microposts_controller and users_controller need access to the method
+   
+module SessionsHelper 
+  methods listed below
+  
+    def logged_in?
+       !current_user.nil?
+    end
+
+=end

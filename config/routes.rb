@@ -50,5 +50,7 @@ Rails.application.routes.draw do
   resources :users
    # actions for account activation
   resources :account_activations, only: [:edit] #this edits resources to only include the edit feature
-  resources :password_resets, only: [:new, :create, :edit, :update]
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :microposts,          only: [:create, :destroy] #new and update were not added bc microposts will be added
+  # and edited through the user homepage (so we don't need new views)
 end

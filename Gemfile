@@ -24,7 +24,7 @@ gem 'jbuilder', '2.4.1'
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+
 #seeds the db with fake users to test having a user base
 gem 'faker', '1.6.3'
     # Use Capistrano for deployment
@@ -33,6 +33,11 @@ gem 'faker', '1.6.3'
 gem 'will_paginate', '3.1.0'
 # makes will_paginate work with bootstrap
 gem 'bootstrap-will_paginate', '0.0.10'
+# carrierwave, mini_magick, fog all used for image insertion
+gem 'carrierwave', '0.11.2'
+gem 'mini_magick', '4.5.1'
+gem 'fog',         '1.38.0'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
