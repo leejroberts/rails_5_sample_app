@@ -47,10 +47,29 @@ Rails.application.routes.draw do
   delete '/logout', to: "sessions#destroy"
   
   # actions for user
-  resources :users
+   # this code give the normal resources for users and adds on following and followers
+   # the url will be ...users/id_num/followers (for followers)
+   # IMPORTANT see note for syntax without the user id added in.
+  resources :users do
+    member do #this part adds in the /user_id/
+      get :following, :followers
+    end
+  end
    # actions for account activation
   resources :account_activations, only: [:edit] #this edits resources to only include the edit feature
   resources :password_resets,     only: [:new, :create, :edit, :update]
   resources :microposts,          only: [:create, :destroy] #new and update were not added bc microposts will be added
+  resources :relationships,       only: [:create, :destroy] #adds the ability to create and destroy relationships (aka active_relationships and passive_relationships)
   # and edited through the user homepage (so we don't need new views)
+=begin Note:
+ syntax for adding to resources WITHOUT having the user_id in the url users/tigers vs users/user_id/tigers
+ 
+resources :users do
+  collection do
+    get :tigers
+  end
 end
+
+=end
+end
+

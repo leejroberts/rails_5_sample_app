@@ -3,7 +3,24 @@ class User < ApplicationRecord
   has_many :microposts, dependent: :destroy #gives the user many posts, 
   # destroys user microposts with destruction of user (by admin)
   
-  #NOTE: attr_accessor!!!
+  # the odd syntax below is related to the fact that active_relationships
+    ## is not a model. 
+  has_many :active_relationships, class_name: "Relationship", #tells rails where to look (in the Relationship class or model)
+                                  foreign_key: 'follower_id', #I believe this automatically sets the user_id to the follower_id
+                                  dependent: :destroy #if the user is destroyed all other their active_relationships are destroyed
+  has_many :following, through: :active_relationships, source: :followed 
+  #source: is needed bc the followed and following aren't plural/singular of one another so their relationship has to be stated explicitly
+  # if instead has_many :followeds  rails could figure this out but it looks really odd to humans
+  
+  
+  has_many :passive_relationships, class_name: 'Relationship',
+                                  foreign_key: 'followed_id',
+                                  dependent: :destroy #if the user is destroyed, all of their passive relationships are destroyed 
+                                  #(a user can't follow a non-existant other user)
+  has_many :followers, through: :passive_relationships, source: :follower 
+  #source isn't actually needed in this line bc follower and followers line up
+                                  
+   #NOTE: attr_accessor!!!
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email             # calls method(s) before saving to DB
   before_create :create_activation_digest   # before instantiation AND save (double check this)
@@ -77,13 +94,58 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago 
   end
   
-  #defines a 'proto-feed' used for the home page(if user is logged in)
-    # supplies a list of recent microposts by the user to...
+  #defines a feed used for the home page(if user is logged in)
+    # supplies a list of recent microposts by the user and those the user follows
     # => static_pages/root_url thus => shared/_feed (partial then rendered on the home page)
+    # this uses an SQL subselect see hartl chapter 14 section 14.3.3
+    # summary subselects are more effecient for large database queries
+    # they put the result of the subselect into the database, rather than into the working memory
   def feed
-    Micropost.where("user_id = ?", id) #note: where method, sql injection
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE  follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
+  end
+
+  
+  #following, unfollow etc other users
+  
+  # checks if user is following another user
+   # self. can be excluded bc we are in the model but i left it for clarity
+   # the "following" method is derived from has_many :following...at top
+   # following gives you access to the list of followers
+  def following?(other_user)
+    self.following.include?(other_user)
   end
   
+  # creates the following relationship aka follows the microposts of another user
+    # it creates an active_relationship (vs a passive relationship)
+    # sets the user_id of the other user to followed id
+    # aka other_user.id == followed_id
+  def follow(other_user)
+    active_relationships.create(followed_id: other_user.id)
+  end
+  
+  # unfollow method explanation 
+   # finds the active relationship via the other user's id
+   # there is an understood self. before active_relationships.find_by...
+   # thus translated;
+    # find a relationship where the follower_id is the current user
+    # and the followed_id is the id of the user from the 'argument'
+    
+  # __THE COMMENTED OUT METHOD BELOW CALLS calls unfollow__
+  # Destroy method is in the relationships controller
+  #   def destroy
+  #     other_user = Relationship.find(params[:id]).followed 
+  #     current_user.unfollow(other_user)
+  #     redirect_to user
+  #   end
+  
+  # Unfollows a user.
+  def unfollow(other_user)
+    self.active_relationships.find_by(followed_id: other_user).destroy
+  end
+    
   private
   
     #converts email to all lowercase for ease of comparison/checking/finding user

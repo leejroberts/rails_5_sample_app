@@ -1,15 +1,17 @@
 class UsersController < ApplicationController
   #before_actions; rails method used to make sure something has happened first
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy] #confirms user logged in before the actions to the right
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :following, :followers] #confirms user logged in before the actions to the right
     ##important: logged_in_user moved to APPLICATION_CONTROLLER see note:
   before_action :correct_user,   only: [:edit, :update] #confirms user is attempting to edit/update self
   before_action :admin_user,     only: :destroy
   
-  #Note: that many of these methods create an instance variable @user; 
+ 
+  # Notes for SHOW action
+  # routes to user/show to show the currently logged in user;
+  # displays all the microposts in pages from most recent to least recent;
   
-  #routes to user/show to show the currently logged in user
-  ## displays all the microposts in pages from most recent to least recent
-  
+  # VERY IMPORTANT in this case @user is the user BEING VIEWED, 
+    # @user is NOT current user
   def show
     @user = User.find(params[:id])#finds user by the id parameter; creates an instance of the user 
     @microposts = @user.microposts.paginate(page: params[:page])
@@ -32,7 +34,7 @@ class UsersController < ApplicationController
       @user.send_activation_email #original code relocated to user model in this method
       flash[:info] = "Please check your email to activate your account." #pop_up to create user message
       redirect_to root_url #sends you back to the root_ufrl aka "welcome page"
-      ##code below is for a user sign-up without email activation being sent
+      ## code below is for a user sign-up without email activation being sent
         ## log_in @user #logs in the newly created user... 
         ## flash[:success] = "Welcome to the Sample App!" #and show this message
         ## redirect_to @user #renders view/user/show
@@ -71,7 +73,20 @@ class UsersController < ApplicationController
     redirect_to users_url
   end
 
-  
+  def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
   
   
   private #the private section defines methods accessed within rails; used for security

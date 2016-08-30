@@ -1,0 +1,16 @@
+<!-- the following code is in JQuery -->
+$("#follow_form").html("<%= escape_javascript(render('users/unfollow')) %>");
+$("#followers").html('<%= @user.followers.count %>');
+
+<!-- line 2 identifies an html divider with the class follow_form
+it then renders the unfollow form 
+this change is strictly visual, the actual following/relationship join is handled in the relationship controller
+escape_javascript is a jquery method needed for the render action to work  
+
+line 3 identifies the html divider with the class followers, 
+  then recounts the number of followers and repopulates the stats
+  so that the numbers update every time the user clicks follow or unfollow buttons
+
+
+
+->

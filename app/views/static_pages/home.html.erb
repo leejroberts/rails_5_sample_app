@@ -4,6 +4,9 @@
             <section class="user_info">
                 <%= render 'shared/user_info' %>
             </section>
+            <section class="stats">
+                <%= render 'shared/stats' %>
+            </section>
             <section class="micropost_form">
                 <%= render 'shared/micropost_form' %>
             </section>
@@ -24,6 +27,7 @@
     </div>
     <%= link_to image_tag("rails.png", alt: "Rails logo"), 'http://rubyonrails.org/' %>
 <% end %>
+
 <!-- 
 notes:
     If you're logged in, the homepage renders a basic user info page with 

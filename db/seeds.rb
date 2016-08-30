@@ -37,11 +37,35 @@ end
   ## this makes 50 posts for all 6 users aka 450 posts
     ## so user1 post, user2 post, user3 post user4 post etc
     ## then loops back to user1 49 more times
-    
 users = User.order(:created_at).take(6) #takes the first 6 users from the DB
 50.times do #does the code below 50 times
   content = Faker::Lorem.sentence(5) #makes 5 sentences of lorem ipsum
   users.each { |user| user.microposts.create!(content: content)} #one post per user 
 end
+
+#relationship creates follow relationships
+users = User.all #harvests all users
+user = users.first #gets the first user
+followers = users[1..50] #sets the followers array indices of 1 through 50 (skips the first user)
+following = users[3..40] #sets the following array indices of 2 through 40 (skips the first two users)
+# below code: 
+  #iterates through the followed "array" of users,
+  # and the user follows each in the "array" using the follow method
+following.each { |followed| user.follow(followed) }
+# below code:
+  # iterates through the followers "array" of users,
+  # each follower follows the user via a call to the follow method
+followers.each { |follower| follower.follow(user) }
+# basically they do the opposite of one another.
+
+
+#why the above code reverses to set followers and followed
+  # in our current application, following is a choice made by the user
+  # this occurs via the follow method in User.rb
+  # a user CAN set a following but a user CAN'T directly set a followER
+  #   a user can choose to follow the microposts of another user
+    # but a user can't choose to have another viewer forced to follow them
+  # christian analogy: you can choose to follow christ, but christ can't choose for you to follow him
+
 
     
